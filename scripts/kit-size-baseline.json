@@ -1,0 +1,6 @@
+{
+  "kitBytesGz": 1036604,
+  "measuredAt": "2026-06-24",
+  "note": "Measured baseline for gas-template with Phase 3 (M2) kit primitives + scaffolds + stories. Value is the whole-app JS gz bytes from `expo export --platform web`. This is a stable proxy for kit growth — the true Hermes .hbc delta is recorded from the native EAS artifact into hermesBytes out of band (not by this script). Update with `node scripts/check-bundle-size.mjs --update-kit-baseline` when intentional kit additions land. The CI gate fails if the measured value exceeds this baseline by >5% OR exceeds performance.maxKitBytesGz in gas.config.ts.",
+  "hermesBytes": null
+}
