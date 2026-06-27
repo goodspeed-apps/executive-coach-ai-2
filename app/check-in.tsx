@@ -35,7 +35,7 @@ export default function CheckInScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { track } = useAnalytics();
-  const { toast, showToast, hideToast } = useToast();
+  const { toast, showToast } = useToast();
   const [mood, setMood] = useState<number | null>(null);
   const [energy, setEnergy] = useState<number | null>(null);
   const [status, setStatus] = useState<TaskStatus | null>(null);
@@ -178,7 +178,7 @@ export default function CheckInScreen() {
           />
         </View>
       </KeyboardAvoidingView>
-      <Toast toast={toast} onHide={hideToast} />
+      <Toast toast={toast} />
     </SafeAreaView>
   );
 }

@@ -94,12 +94,6 @@ export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
       auth: "centered-card",
       settings: "grouped-cards",
     },
-    screenArchetypes: {
-      "initial-habits-commitments": "timeline-feed",
-      "home-coaching-dashboard": "timeline-feed",
-      "weekly-retrospective": "timeline-feed",
-      "task-commitment-detail": "timeline-feed",
-    },
     kitSeed: "0000",
   },
 
@@ -210,7 +204,7 @@ export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
     },
     gamification: {
       enabled: false,
-      elements: null,
+      elements: [],
     },
     onboarding: {
       enabled: false,
@@ -218,8 +212,8 @@ export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
     },
     helpSystem: false,
     search: {
-      enabled: null,
-      entities: null,
+      enabled: false,
+      entities: [],
       implementation: "client-side",
     },
     socialSharing: {
