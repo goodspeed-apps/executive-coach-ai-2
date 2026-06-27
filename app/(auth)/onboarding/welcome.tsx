@@ -1,18 +1,23 @@
 /**
- * GAS Template, Onboarding Welcome Screen
+ * Onboarding Welcome / Landing Screen
  *
- * First onboarding step. Shows the app logo, name, and description from gasConfig.
- * "Get Started" CTA navigates to the next onboarding step (or signup if only one step).
+ * The app's landing screen (route '/' resolves here for first-launch visitors).
+ * Structure matches the approved design:
+ *   - Hero headline + tagline (the "coach who remembers" promise)
+ *   - Comparison card (generic apps vs. Executive Coach AI)
+ *   - "What your coach will track" feature grid
+ *   - Primary "Create your account" CTA (routes to signup) + secondary sign-in link
  *
- * This is a placeholder, DevAgent adds more onboarding steps based on the app.
- * The step dots and navigation adapt to gasConfig.features.onboarding.steps.
+ * The CTA marks onboarding complete then routes to signup. If a DevAgent adds
+ * more onboarding steps to gasConfig.features.onboarding.steps, the CTA instead
+ * advances to the next step and the step dots appear.
  *
  * All colors come from useThemeColors(), never hardcoded.
  * Uses SafeAreaView from 'react-native-safe-area-context' (CRITICAL).
  */
 
 import { useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -23,7 +28,40 @@ import { gasConfig } from '../../../gas.config';
 
 const ONBOARDING_STEPS = gasConfig.features.onboarding.steps;
 const APP_NAME = gasConfig.app.name;
-const APP_DESCRIPTION = gasConfig.app.description;
+
+// Hero copy for the landing/onboarding screen. The headline names the product's
+// core promise (a coach that remembers), the tagline frames the differentiator.
+const HERO_HEADLINE = "A coach who remembers every pattern you've shared";
+const HERO_TAGLINE =
+  'Unlike generic coaching apps that reset to zero each session, your coaching quality compounds the longer you stay.';
+
+// Comparison card: the central "why us" contrast that the approved design shows.
+const COMPARISON = {
+  them: {
+    label: 'Generic coaching apps',
+    points: [
+      'Forget your history every session',
+      'Restart from zero context each time',
+      'Generic, one-size-fits-all advice',
+    ],
+  },
+  us: {
+    label: 'Executive Coach AI',
+    points: [
+      'Builds a persistent behavioral model',
+      'Retrospectives from your own history',
+      'Real-time nudges when it detects drift',
+    ],
+  },
+};
+
+// "What your coach will track" feature grid.
+const TRACKING_FEATURES = [
+  { icon: '✓', title: 'Task completion', detail: 'Patterns across weeks and months' },
+  { icon: '⚡', title: 'Emotional triggers', detail: 'What pulls you off course' },
+  { icon: '↻', title: 'Avoidance cycles', detail: 'Recurring loops you fall into' },
+  { icon: '📈', title: 'Weekly retrospectives', detail: 'Generated from real behavior' },
+];
 
 /**
  * Step progress dots, shows current position in the onboarding flow.
@@ -89,28 +127,98 @@ export default function OnboardingWelcome() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View style={{ flex: 1, paddingHorizontal: 24, paddingTop: 24, paddingBottom: 32, justifyContent: 'space-between' }}>
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 24, paddingBottom: 24, gap: 28 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Step dots */}
-        <StepDots step={1} total={totalDots} />
+        {totalDots > 1 && <StepDots step={1} total={totalDots} />}
 
-        {/* Center content */}
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 32 }}>
-          <AppLogo size={72} />
+        {/* Hero section */}
+        <View style={{ alignItems: 'center', gap: 16, marginTop: 8 }}>
+          <AppLogo size={64} />
+          <Text style={{ fontSize: 14, fontWeight: '600', color: colors.primary, textAlign: 'center', letterSpacing: 0.5 }}>
+            {APP_NAME}
+          </Text>
+          <Text
+            accessibilityRole="header"
+            style={{ fontSize: 32, fontWeight: '800', color: colors.text, letterSpacing: -1, textAlign: 'center', lineHeight: 40 }}
+          >
+            {HERO_HEADLINE}
+          </Text>
+          <Text style={{ fontSize: 16, color: colors.textSecondary, textAlign: 'center', lineHeight: 24, maxWidth: 320 }}>
+            {HERO_TAGLINE}
+          </Text>
+        </View>
 
-          <View style={{ alignItems: 'center', gap: 12 }}>
-            <Text style={{ fontSize: 38, fontWeight: '800', color: colors.text, letterSpacing: -1, textAlign: 'center' }}>
-              {APP_NAME}
+        {/* Comparison card */}
+        <View
+          style={{
+            borderWidth: 1,
+            borderColor: colors.border,
+            borderRadius: 20,
+            backgroundColor: colors.surface,
+            padding: 20,
+            gap: 20,
+          }}
+        >
+          {/* Generic apps column */}
+          <View style={{ gap: 10 }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: colors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              {COMPARISON.them.label}
             </Text>
-            <Text style={{
-              fontSize: 16, color: colors.textSecondary,
-              textAlign: 'center', lineHeight: 24, maxWidth: 280,
-            }}>
-              {APP_DESCRIPTION}
+            {COMPARISON.them.points.map((point) => (
+              <View key={point} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+                <Text style={{ color: colors.error, fontSize: 15, lineHeight: 22 }}>✕</Text>
+                <Text style={{ flex: 1, color: colors.textSecondary, fontSize: 15, lineHeight: 22 }}>{point}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={{ height: 1, backgroundColor: colors.border }} />
+
+          {/* Executive Coach AI column */}
+          <View style={{ gap: 10 }}>
+            <Text style={{ fontSize: 13, fontWeight: '700', color: colors.primary, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+              {COMPARISON.us.label}
             </Text>
+            {COMPARISON.us.points.map((point) => (
+              <View key={point} style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
+                <Text style={{ color: colors.success, fontSize: 15, lineHeight: 22 }}>✓</Text>
+                <Text style={{ flex: 1, color: colors.text, fontSize: 15, lineHeight: 22 }}>{point}</Text>
+              </View>
+            ))}
           </View>
         </View>
 
-        {/* CTA button */}
+        {/* What your coach will track — feature grid */}
+        <View style={{ gap: 14 }}>
+          <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text }}>
+            What your coach will track
+          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 12 }}>
+            {TRACKING_FEATURES.map((feature) => (
+              <View
+                key={feature.title}
+                style={{
+                  width: '47%',
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                  borderRadius: 16,
+                  backgroundColor: colors.surface,
+                  padding: 16,
+                  gap: 8,
+                }}
+              >
+                <Text style={{ fontSize: 22 }}>{feature.icon}</Text>
+                <Text style={{ fontSize: 15, fontWeight: '700', color: colors.text }}>{feature.title}</Text>
+                <Text style={{ fontSize: 13, color: colors.textSecondary, lineHeight: 18 }}>{feature.detail}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        {/* Primary CTA — Create your account */}
         <TouchableOpacity
           style={{
             width: '100%',
@@ -119,13 +227,30 @@ export default function OnboardingWelcome() {
             paddingVertical: 16,
             alignItems: 'center',
             minHeight: 54,
+            marginTop: 4,
           }}
           onPress={handleGetStarted}
-          accessibilityLabel="Get started"
+          accessibilityRole="button"
+          accessibilityLabel="Create your account"
         >
-          <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Get Started</Text>
+          <Text style={{ color: 'white', fontWeight: '600', fontSize: 16 }}>Create your account</Text>
         </TouchableOpacity>
-      </View>
+
+        {/* Secondary link — existing users */}
+        <TouchableOpacity
+          style={{ alignItems: 'center', paddingVertical: 8 }}
+          onPress={async () => {
+            await markOnboardingComplete();
+            router.push('/(auth)/login');
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Sign in to an existing account"
+        >
+          <Text style={{ color: colors.textSecondary, fontSize: 14 }}>
+            Already have an account? <Text style={{ color: colors.primary, fontWeight: '600' }}>Sign in</Text>
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }

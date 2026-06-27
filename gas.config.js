@@ -195,8 +195,8 @@ const gasConfig = {
       elements: null,
     },
     onboarding: {
-      enabled: false,
-      steps: [],
+      enabled: true,
+      steps: ["welcome"],
     },
     helpSystem: false,
     search: {
