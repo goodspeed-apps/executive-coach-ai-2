@@ -30,6 +30,7 @@ export interface KitPressableProps {
   feedbackFamily?: KitButtonVariantId;
   accessibilityRole?: 'button' | 'link' | 'none';
   accessibilityLabel?: string;
+  accessibilityHint?: string;
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
@@ -41,6 +42,7 @@ export function KitPressable({
   feedbackFamily,
   accessibilityRole = 'button',
   accessibilityLabel,
+  accessibilityHint,
   style,
   testID,
 }: KitPressableProps) {
@@ -56,6 +58,7 @@ export function KitPressable({
       disabled={disabled}
       accessibilityRole={accessibilityRole}
       accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled }}
       testID={testID}
       style={({ pressed }) => [

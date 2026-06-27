@@ -19,9 +19,19 @@ export interface GasLegalConfig {
   termsUrl: string;
 }
 
+// Template-local design augmentation (NOT part of the schema GasDesignSystem).
+// The studio compiler serializes a short `design.kitSeed` hex that KitContext
+// reads to derive the per-app kit variant bytes; see lib/design-language.ts.
+export interface GasDesignSeedConfig {
+  kitSeed: string;
+}
+
 // ─── Configuration ────────────────────────────────────────────────────────────
 
-export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
+export const gasConfig: GasConfig & {
+  design: GasConfig['design'] & GasDesignSeedConfig;
+  legal: GasLegalConfig;
+} = {
   app: {
     name: "Executive Coach AI",
     slug: "executive-coach-ai-2",
