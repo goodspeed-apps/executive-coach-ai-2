@@ -1,0 +1,15 @@
+{
+  "$schema": "https://goodspeed.app/schemas/propagation-manifest.json",
+  "description": "Template-authored fleet-propagation change feed. Each entry declares one safe-to-propagate change (security or safe-non-visual). The studio classifier reads this at the template HEAD and emits change_records; patch bodies and inverse SQL are authored here and applied verbatim — never synthesized.",
+  "changes": [
+    {
+      "id": "withcache-arg-order-63",
+      "severity": "safe-non-visual",
+      "backendScope": "none",
+      "deliveryHint": "ota",
+      "reversibilityClass": "forward-only",
+      "inverseSqlPath": null,
+      "summary": "Align the two withCache helpers to one argument order (gas-template #63) — internal correctness fix, no UI or visible-behavior change."
+    }
+  ]
+}
