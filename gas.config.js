@@ -27,14 +27,14 @@ const gasConfig = {
       text: "#F9FAFB",
       error: "#C44536",
       accent: "#F4A261",
-      border: "#1E1E24",
+      border: "#E5E7EB",
       primary: "#E8622A",
       success: "#10B981",
-      surface: "#111114",
+      surface: "#FFFFFF",
       warning: "#F59E0B",
       textDark: "#F9FAFB",
       secondary: "#2D6A4F",
-      background: "#0D0D0F",
+      background: "#F9FAFB",
       borderDark: "#1E1E24",
       primaryDark: "#E8622A",
       surfaceDark: "#111114",
@@ -192,7 +192,7 @@ const gasConfig = {
     },
     gamification: {
       enabled: false,
-      elements: null,
+      elements: [],
     },
     onboarding: {
       enabled: false,
@@ -285,6 +285,13 @@ const gasConfig = {
     tabBarVariant: "standard",
   },
 
+  backend: {
+    supabase: {
+      url: "",
+      anonKey: "",
+    },
+  },
+
   releaseChannels: {
     current: "production",
     storeUrl: {
@@ -315,167 +322,7 @@ const gasConfig = {
       desktop: 1024,
     },
     honorDynamicType: true,
-    honorReducedMotion: true,
-  },
-
-  multiTenancy: {
-    enabled: false,
-    defaultRole: "member",
-  },
-
-  integrations: {
-    oauthProviders: [],
-  },
-
-  growth: {
-    experimentsEnabled: true,
-    defaultBackgroundSyncInterval: 60000,
-    referralCodeLength: 8,
-  },
-
-  media: {
-    provider: "supabase",
-    maxUploadBytes: 10485760,
-    allowedContentTypes: ["image/jpeg", "image/png", "image/webp"],
-    defaultBucket: "uploads",
-    maxImageEdge: 2048,
-    signedUrlTtlSeconds: 3600,
-  },
-
-  search: {
-    defaultLanguage: "en",
-    defaultLimit: 20,
-    maxLimit: 100,
-  },
-
-  realtime: {
-    presenceTimeoutMs: 30000,
-    autoReconnect: true,
-    defaultRetries: 3,
-  },
-
-  llm: {
-    provider: "anthropic",
-    defaultChatModel: "claude-opus-4-1",
-    defaultEmbedModel: "claude-3-5-sonnet-20241022",
-    defaultTranscribeModel: "whisper-1",
-    costScope: "monthly",
-    budgetPeriod: "month",
-  },
-
-  privacy: {
-    dataCategories: [
-      {
-        type: "NSPrivacyCollectedDataTypeName",
-        linked: true,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
-      },
-      {
-        type: "NSPrivacyCollectedDataTypeEmailAddress",
-        linked: true,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
-      },
-      {
-        type: "NSPrivacyCollectedDataTypeUserID",
-        linked: true,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
-      },
-      {
-        type: "NSPrivacyCollectedDataTypeCrashData",
-        linked: false,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAppFunctionality"],
-      },
-      {
-        type: "NSPrivacyCollectedDataTypePerformanceData",
-        linked: false,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAnalytics"],
-      },
-      {
-        type: "NSPrivacyCollectedDataTypeProductInteraction",
-        linked: false,
-        tracking: false,
-        purposes: ["NSPrivacyCollectedDataTypePurposeAnalytics"],
-      },
-    ],
-    trackingDomains: [],
-    attUsageDescription: "We use device identifiers to deliver relevant content and measure engagement. You can opt out in Settings.",
-    attTriggerEvent: "first_launch",
-  },
-
-  observability: {
-    sentryDsn: process.env.SENTRY_DSN ?? '',
-    tracesSampleRate: 0.1,
-    enableSessionReplay: true,
-  },
-
-  costBudgets: {
-    defaults: {},
-  },
-
-  performance: {
-    maxBundleSizeMB: 8,
-    coldStartTargetMs: 2500,
-  },
-
-  e2e: {
-    framework: "maestro",
-    cloudWorkspaceId: "",
-  },
-
-  admin: {
-    enabled: true,
-    defaultRoleCheck: "profiles.role",
-  },
-
-  monitoring: {
-    crashFreeThresholds: {
-      production: {
-        ios: 99.5,
-        android: 99,
-      },
-      staging: 95,
-      preview: 0,
-    },
-    crashFreeWindow: "24h",
-  },
-
-  legal: {
-    privacyUrl: "",
-    termsUrl: "",
-  },
-
-  backend: {
-    supabase: {
-      url: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
-      anonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
-    },
-    revenuecat: {
-      iosKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? '',
-      androidKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID ?? '',
-    },
-    posthog: {
-      apiKey: process.env.EXPO_PUBLIC_POSTHOG_API_KEY ?? '',
-      host: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
-    },
-    telemetry: {
-      // EXPO_PUBLIC_TELEMETRY_INGEST_SECRET — ingest identity HMAC key. Public-bundle
-      // value, not an auth secret. TelemetryProvider reads .ingestSecret at module
-      // init; the field MUST be present (empty string is OK) or the React tree
-      // crashes on first mount. See gas-template GasBackendConfig.telemetry.
-      ingestSecret: process.env.EXPO_PUBLIC_TELEMETRY_INGEST_SECRET ?? '',
-    },
-    stripe: {
-      // Same always-emit pattern as telemetry: safe-off empty string at codegen,
-      // runtime decides whether to init Stripe based on marketplace.enabled.
-      publishableKey: process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '',
-    },
   },
 };
 
 module.exports = { gasConfig };
-module.exports.default = gasConfig;
