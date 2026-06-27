@@ -156,7 +156,7 @@ const sendReply = useCallback(async () => {
             <Text style={{ color: colors.text, fontWeight: '700', fontSize: 16, flex: 1 }}>
               {active?.subject ?? '(no subject)'}
             </Text>
-            <Button title="Resolve" onPress={markResolved} />
+            <Button label="Resolve" onPress={markResolved} />
           </View>
 
           {msgLoading ? (
@@ -202,7 +202,7 @@ const sendReply = useCallback(async () => {
               }}
               multiline
             />
-            <Button title={sending ? '…' : 'Send'} onPress={sendReply} disabled={sending} />
+            <Button label={sending ? '…' : 'Send'} onPress={sendReply} disabled={sending} />
           </View>
         </View>
       </Modal>

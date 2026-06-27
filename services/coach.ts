@@ -13,7 +13,8 @@ import type {
 const today = (): string => new Date().toISOString().slice(0, 10);
 
 export async function fetchProfile(userId: string): Promise<AppProfile | null> {
-  return trackApiLatency('fetchProfile', async () => {
+  const end = trackApiLatency('fetchProfile');
+  try {
     const { data, error } = await supabase
       .from('profiles')
       .select('*')
@@ -24,7 +25,9 @@ export async function fetchProfile(userId: string): Promise<AppProfile | null> {
       throw error;
     }
     return data as AppProfile | null;
-  });
+  } finally {
+    end();
+  }
 }
 
 export async function fetchStreak(userId: string): Promise<Streak | null> {
