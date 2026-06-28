@@ -70,11 +70,23 @@ export function trackScreenLoad(screenName: string, startTimeMs: number): void {
  */
 export function trackApiLatency(endpoint: string): () => void;
 export function trackApiLatency(endpoint: string, durationMs: number, cached?: boolean): void;
-export function trackApiLatency(
+export function trackApiLatency<T>(endpoint: string, work: () => Promise<T>): Promise<T>;
+export function trackApiLatency<T>(
   endpoint: string,
-  durationMs?: number,
+  durationMsOrWork?: number | (() => Promise<T>),
   cached = false
-): (() => void) | void {
+): (() => void) | void | Promise<T> {
+  // Wrapper mode: a thunk returning a promise was supplied. Measure how long it
+  // takes to resolve, report the latency, and return the awaited result so
+  // callers can `await trackApiLatency('x', () => query())` and read `.data`.
+  if (typeof durationMsOrWork === 'function') {
+    const start = Date.now();
+    return durationMsOrWork().then((result) => {
+      trackApiLatency(endpoint, Date.now() - start, false);
+      return result;
+    });
+  }
+  const durationMs = durationMsOrWork;
   // Timer mode: no duration supplied, return a stop function that reports the
   // elapsed time when called. Lets generated code use the common
   // `const end = trackApiLatency('x'); ...; end?.()` pattern.

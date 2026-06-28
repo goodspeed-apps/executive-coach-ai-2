@@ -55,6 +55,8 @@ export interface ToastContextValue {
   info: (message: string) => void;
 /** Backward-compatible showToast (type, message, duration) */
   showToast: (message: string, type?: ToastType, duration?: number) => void;
+  /** Dismiss the current/most-recent toast. No-op when none is queued. */
+  hideToast: () => void;
   /**
    * Current/most-recent toast. ALWAYS a non-null object so screens that read
    * `toast.message` / `toast.visible` / `toast.type` for an inline <Toast/> never
@@ -217,9 +219,14 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [show],
   );
 
+  const hideToast = useCallback(() => {
+    setToasts(prev => (prev.length ? prev.slice(1) : prev));
+  }, []);
+
 const value: ToastContextValue = {
     show,
     showToast,
+    hideToast,
     success: useCallback((msg: string) => show('success', msg), [show]),
     error: useCallback((msg: string) => show('error', msg), [show]),
     warning: useCallback((msg: string) => show('warning', msg), [show]),

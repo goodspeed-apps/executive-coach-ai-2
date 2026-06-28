@@ -34,8 +34,8 @@ export default function RetrospectivesScreen() {
   const router = useRouter();
   const { user } = useAuth();
   const { track } = useAnalytics();
-  const { isPro } = useSubscription();
-  const { present } = usePaywall();
+  const { isPaid } = useSubscription();
+  const { showPaywall } = usePaywall();
   const [items, setItems] = useState<Retro[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -73,10 +73,10 @@ export default function RetrospectivesScreen() {
   }, [load]);
 
   const openRetro = (r: Retro) => {
-    const gated = r.is_locked || (r.generation_index >= 2 && !isPro);
+    const gated = r.is_locked || (r.generation_index >= 2 && !isPaid);
     if (gated) {
       track('retrospective_gate_hit', { index: r.generation_index });
-      present('retrospective_gate');
+      showPaywall('retrospective_gate');
       return;
     }
     track('retrospective_opened', { id: r.id });
@@ -125,7 +125,7 @@ export default function RetrospectivesScreen() {
           />
         }
         renderItem={({ item, index }) => {
-          const gated = item.is_locked || (item.generation_index >= 2 && !isPro);
+          const gated = item.is_locked || (item.generation_index >= 2 && !isPaid);
           return (
             <Animated.View entering={FadeInDown.delay(60 * index).springify()}>
               <KitPressable

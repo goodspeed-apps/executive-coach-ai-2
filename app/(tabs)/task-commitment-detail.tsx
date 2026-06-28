@@ -134,7 +134,7 @@ export default function TaskCommitmentDetailScreen() {
         <View style={styles.ctaRow}>
           <KitButton testID="task-commitment-detail-log" label="Log Completion" onPress={logCompletion} style={{ flex: 1 }} />
         </View>
-        <KitButton label="Reschedule" variant="secondary" onPress={() => { track('commitment_reschedule_tapped'); showToast('Reschedule coming up', 'info'); }} />
+        <KitButton label="Reschedule" variant="outline" onPress={() => { track('commitment_reschedule_tapped'); showToast('Reschedule coming up', 'info'); }} />
       </ScrollView>
       <Toast toast={toast} onHide={hideToast} />
     </SafeAreaView>
