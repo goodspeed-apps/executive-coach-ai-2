@@ -148,7 +148,7 @@ const sendReply = useCallback(async () => {
                   : (item.profiles.display_name ?? 'Unknown');
             return (
               <Card style={{ margin: 8 }}>
-                <TouchableOpacity onPress={() => openThread(item)} style={{ padding: 12 }}>
+                <TouchableOpacity onPress={() => openThread(item)} style={{ padding: 12 }} accessibilityLabel={`Open thread ${item.subject ?? '(no subject)'}`}>
                   <Text style={{ color: colors.text, fontWeight: '600', fontSize: 15 }}>
                     {item.subject ?? '(no subject)'}
                   </Text>
@@ -170,14 +170,14 @@ const sendReply = useCallback(async () => {
         <View style={{ flex: 1, backgroundColor: colors.background }}>
           {/* Header */}
           <View style={{ flexDirection: 'row', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderColor: colors.border }}>
-            <TouchableOpacity onPress={() => setActive(null)} style={{ marginRight: 12 }}>
+            <TouchableOpacity onPress={() => setActive(null)} style={{ marginRight: 12 }} accessibilityLabel="Close thread">
               <Text style={{ color: colors.primary, fontSize: 16 }}>Close</Text>
             </TouchableOpacity>
             <Text style={{ flex: 1, color: colors.text, fontWeight: '700', fontSize: 16 }} numberOfLines={1}>
               {active?.subject ?? '(no subject)'}
             </Text>
             {active?.status !== 'resolved' && (
-              <Button title="Resolve" onPress={markResolved} />
+              <Button label="Resolve" onPress={markResolved} accessibilityLabel="Resolve thread" />
             )}
           </View>
 
@@ -233,6 +233,7 @@ const sendReply = useCallback(async () => {
               style={styles.sendButton}
               onPress={sendReply}
               disabled={sending || !reply.trim()}
+              accessibilityLabel="Send reply"
             >
               {sending ? (
                 <ActivityIndicator size="small" color={colors.textOnPrimary} />
