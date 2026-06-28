@@ -8,7 +8,12 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee"
+        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://cfixmigrwwyafsmniovp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaXhtaWdyd3d5YWZzbW5pb3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MDA1ODAsImV4cCI6MjA5ODE3NjU4MH0.3rgGn9nBRKhZ1DpHq6b9oYg5xv7BcWTQ8gRZj01upKY",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "0691c80b-9cef-41c9-9874-6a47f9d24989",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
       }
     },
     "preview": {
@@ -27,7 +32,12 @@
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "preview",
-        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee"
+        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://cfixmigrwwyafsmniovp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaXhtaWdyd3d5YWZzbW5pb3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MDA1ODAsImV4cCI6MjA5ODE3NjU4MH0.3rgGn9nBRKhZ1DpHq6b9oYg5xv7BcWTQ8gRZj01upKY",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "0691c80b-9cef-41c9-9874-6a47f9d24989",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
       }
     },
     "preview-sim": {
@@ -56,7 +66,12 @@
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "staging",
-        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee"
+        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://cfixmigrwwyafsmniovp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaXhtaWdyd3d5YWZzbW5pb3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MDA1ODAsImV4cCI6MjA5ODE3NjU4MH0.3rgGn9nBRKhZ1DpHq6b9oYg5xv7BcWTQ8gRZj01upKY",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "0691c80b-9cef-41c9-9874-6a47f9d24989",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
       }
     },
     "production": {
@@ -73,7 +88,12 @@
       },
       "env": {
         "EXPO_PUBLIC_RELEASE_CHANNEL": "production",
-        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee"
+        "EAS_PROJECT_ID": "d5b4d993-e6bb-464c-ab07-243cdd8968ee",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://cfixmigrwwyafsmniovp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaXhtaWdyd3d5YWZzbW5pb3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MDA1ODAsImV4cCI6MjA5ODE3NjU4MH0.3rgGn9nBRKhZ1DpHq6b9oYg5xv7BcWTQ8gRZj01upKY",
+        "EXPO_PUBLIC_GOODSPEED_APP_ID": "0691c80b-9cef-41c9-9874-6a47f9d24989",
+        "EXPO_PUBLIC_POSTHOG_API_KEY": "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+        "EXPO_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
       }
     }
   },

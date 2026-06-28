@@ -12,7 +12,7 @@ const gasConfig = {
   app: {
     name: "Executive Coach AI",
     slug: "executive-coach-ai-2",
-    description: "Executive Coach AI builds a persistent behavioral model of each user — tracking task completion patterns, emotional triggers, and avoidance cycles across months — to deliver structured weekly retrospectives generated FROM your own behavioral history and real-time nudges when it detects drift. Unlike generic coaching apps that reset to zero context each session, coaching quality here compounds the longer you stay. Built for the $60K+ professional with ADHD who can't afford a $200/hr human coach.",
+    description: "Executive Coach AI builds a persistent behavioral model of each user, tracking task completion patterns, emotional triggers, and avoidance cycles across months, to deliver structured weekly retrospectives generated FROM your own behavioral history and real-time nudges when it detects drift. Unlike generic coaching apps that reset to zero context each session, coaching quality here compounds the longer you stay. Built for the $60K+ professional with ADHD who can't afford a $200/hr human coach.",
     scheme: "executive-coach-ai-2",
     version: "1.0.0",
     minRuntimeVersion: "1.0.0",
@@ -56,7 +56,7 @@ const gasConfig = {
       navigationStyle: "standard",
     },
     designIntent: {
-      descriptor: "warm midnight coaching desk — grounded executive calm",
+      descriptor: "warm midnight coaching desk, grounded executive calm",
       params: {
         elevation: 0.25,
         density: 0.35,
@@ -73,7 +73,7 @@ const gasConfig = {
       entrance: "slide",
     },
     expression: {
-      concept: "The Pocket Coaching Desk — a calm, lamp-lit corner office that lives in your phone, where a single grounded coach sits across from you and never makes you scan, decide, or feel behind.",
+      concept: "The Pocket Coaching Desk, a calm, lamp-lit corner office that lives in your phone, where a single grounded coach sits across from you and never makes you scan, decide, or feel behind.",
       layoutPhilosophy: "standard",
       signatureElements: ["The Coach's Seat", "The Memory-Depth Meter", "The Note-Slide"],
     },
@@ -480,16 +480,16 @@ const gasConfig = {
 
   backend: {
     supabase: {
-      url: process.env.EXPO_PUBLIC_SUPABASE_URL ?? '',
-      anonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? '',
+      url: "https://cfixmigrwwyafsmniovp.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNmaXhtaWdyd3d5YWZzbW5pb3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI2MDA1ODAsImV4cCI6MjA5ODE3NjU4MH0.3rgGn9nBRKhZ1DpHq6b9oYg5xv7BcWTQ8gRZj01upKY",
     },
     revenuecat: {
       iosKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? '',
       androidKey: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_ANDROID ?? '',
     },
     posthog: {
-      apiKey: process.env.EXPO_PUBLIC_POSTHOG_API_KEY ?? '',
-      host: process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
+      apiKey: "phc_2dufJlYGfGdf9BKcI1fiRh7GrmY0UZoN9a9MnPN3krW",
+      host: "https://us.i.posthog.com",
     },
     telemetry: {
       // EXPO_PUBLIC_TELEMETRY_INGEST_SECRET — ingest identity HMAC key. Public-bundle
