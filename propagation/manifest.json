@@ -1,0 +1,28 @@
+{
+  "$schema": "https://goodspeed.app/schemas/propagation-manifest.json",
+  "description": "Template-authored fleet-propagation change feed. Each entry declares one safe-to-propagate change (security or safe-non-visual). The studio classifier reads this at the template HEAD and emits change_records; patch bodies and inverse SQL are authored here and applied verbatim — never synthesized.",
+  "changes": [
+    {
+      "id": "withcache-arg-order-63",
+      "severity": "safe-non-visual",
+      "backendScope": "none",
+      "deliveryHint": "ota",
+      "reversibilityClass": "forward-only",
+      "inverseSqlPath": null,
+      "changeKind": "code-patch",
+      "deltaFiles": ["lib/admin.ts", "lib/offline.ts"],
+      "summary": "Align the two withCache helpers to one argument order (gas-template #63) — internal correctness fix, no UI or visible-behavior change."
+    },
+    {
+      "id": "consent-dead-condition-cleanup",
+      "severity": "safe-non-visual",
+      "backendScope": "none",
+      "deliveryHint": "ota",
+      "reversibilityClass": "forward-only",
+      "inverseSqlPath": null,
+      "changeKind": "code-patch",
+      "deltaFiles": ["lib/consent.ts"],
+      "summary": "Remove an unreachable condition in recordConsent: userId is already coalesced to null, so the userId===undefined check can never fire. Behavior is identical (no UI or observable change); a pure internal cleanup."
+    }
+  ]
+}
