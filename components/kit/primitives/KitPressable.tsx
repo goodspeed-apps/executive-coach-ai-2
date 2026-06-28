@@ -30,6 +30,7 @@ export interface KitPressableProps {
   feedbackFamily?: KitButtonVariantId;
   accessibilityRole?: 'button' | 'link' | 'none';
   accessibilityLabel?: string;
+  accessibilityHint?: string;
   style?: StyleProp<ViewStyle>;
   testID?: string;
 }
