@@ -125,6 +125,7 @@ export default function HomeScreen() {
               body={item.body}
               ctaLabel="View nudges"
               onPress={() => router.push('/nudges')}
+              testID="index-view-nudges"
               index={index}
             />
           </View>

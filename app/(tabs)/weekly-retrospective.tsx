@@ -93,7 +93,7 @@ export default function WeeklyRetrospectiveScreen() {
         }
         renderItem={({ item, index }) => (
           <Animated.View entering={FadeInDown.delay(40 * index)}>
-            <RetroRow item={item} onPress={() => openRetro(item)} />
+            <RetroRow item={item} onPress={() => openRetro(item)} testID={`retro-row-${item.id}`} />
           </Animated.View>
         )}
         ListEmptyComponent={

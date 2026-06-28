@@ -19,7 +19,7 @@ function fmt(d: string): string {
   } catch { return d; }
 }
 
-export function RetroRow({ item, onPress }: { item: RetroItem; onPress: () => void }) {
+export function RetroRow({ item, onPress, testID }: { item: RetroItem; onPress: () => void; testID?: string }) {
   const c = useThemeColors();
   const styles = makeStyles(c);
   const quality = (item.quality_rating ?? 0).toFixed(1);
@@ -27,6 +27,7 @@ export function RetroRow({ item, onPress }: { item: RetroItem; onPress: () => vo
   return (
     <KitPressable
       onPress={onPress}
+      testID={testID}
       accessibilityLabel={`Retrospective ${fmt(item.week_start_date)} to ${fmt(item.week_end_date)}`}
       accessibilityHint={item.is_locked ? 'Locked. Opens upgrade options.' : 'Opens this weekly review'}
     >
