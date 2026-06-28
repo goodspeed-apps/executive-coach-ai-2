@@ -17,7 +17,8 @@
  *  - gradient   : LinearGradient primary -> accent fill
  */
 
-import { ActivityIndicator, Text, View, type ViewStyle, type TextStyle } from 'react-native';
+import { isValidElement } from 'react';
+import { ActivityIndicator, Text, View, type ViewStyle, type TextStyle, type StyleProp } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '@/context/ThemeContext';
 import { useKit } from '../KitContext';
@@ -40,11 +41,13 @@ export interface KitButtonProps {
   size?: ButtonSize;
   loading?: boolean;
   disabled?: boolean;
-  icon?: React.ElementType;
+  /** Either an icon component (rendered with size/color) or an already-rendered element. */
+  icon?: React.ElementType | React.ReactElement;
   iconSize?: number;
   fullWidth?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   accessibilityLabel?: string;
+  accessibilityHint?: string;
   testID?: string;
 }
 
@@ -66,6 +69,7 @@ export function KitButton({
   fullWidth = false,
   style,
   accessibilityLabel,
+  accessibilityHint,
   testID,
 }: KitButtonProps) {
   // useKit() unconditionally at the top, never inside `??`.
@@ -152,12 +156,14 @@ export function KitButton({
       break;
   }
 
-  const containerStyle: ViewStyle = {
-    ...container,
-    opacity: isDisabled ? 0.5 : 1,
-    alignSelf: fullWidth ? 'stretch' : 'auto',
-    ...style,
-  };
+  const containerStyle: StyleProp<ViewStyle> = [
+    {
+      ...container,
+      opacity: isDisabled ? 0.5 : 1,
+      alignSelf: fullWidth ? 'stretch' : 'auto',
+    },
+    style,
+  ];
 
   const textStyle: TextStyle = { color: textColor, fontSize: s.fontSize, fontWeight: '600' };
   const iconSz = iconSize ?? s.fontSize;

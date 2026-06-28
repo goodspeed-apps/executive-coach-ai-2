@@ -15,7 +15,7 @@
  *  - inset           : surfaceSecondary + top hairline (recessed)
  */
 
-import { View, type ViewStyle } from 'react-native';
+import { View, type ViewStyle, type StyleProp } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useThemeColors } from '@/context/ThemeContext';
 import { useKit } from '../KitContext';
@@ -34,7 +34,7 @@ export interface KitCardProps {
   /** Override the active card family. */
   variant?: KitCardVariantId;
   onPress?: () => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   padding?: number;
   testID?: string;
 }
@@ -57,12 +57,11 @@ export function KitCard({
 
   // gradient-border is special: an outer ring View wraps an inner surface.
   if (family === 'gradient-border') {
-    const inner: ViewStyle = {
+    const inner: StyleProp<ViewStyle> = [{
       backgroundColor: colors.surface,
       borderRadius: Math.max(r - 2, 0),
       padding,
-      ...style,
-    };
+    }, style];
     const ring = (
       <LinearGradient
         colors={[colors.primary, colors.accent]}
@@ -127,7 +126,7 @@ export function KitCard({
       break;
   }
 
-  const finalStyle: ViewStyle = { ...cardStyle, ...style };
+  const finalStyle: StyleProp<ViewStyle> = [cardStyle, style];
 
   if (onPress) {
     return (

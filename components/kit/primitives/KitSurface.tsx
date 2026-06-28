@@ -8,7 +8,7 @@
  * used (defaulting fail-soft to 'raised', today's look).
  */
 
-import { View, type ViewStyle } from 'react-native';
+import { View, type ViewStyle, type StyleProp } from 'react-native';
 import { useKit } from '../KitContext';
 import { useKitStyle } from './useKitStyle';
 import { containerRadius } from '../../../lib/design-tokens';
@@ -26,7 +26,7 @@ export interface KitSurfaceProps {
   variant?: KitSurfaceVariantId;
   /** Inner padding px (rounded by density). */
   padding?: number;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   testID?: string;
 }
 
@@ -36,12 +36,14 @@ export function KitSurface({ children, variant, padding, style, testID }: KitSur
   const ks = useKitStyle();
   const family: KitSurfaceVariantId = variant ?? kit?.surface ?? DEFAULT_KIT_SURFACE_VARIANT;
 
-  const surfaceStyle: ViewStyle = {
-    borderRadius: containerRadius(),
-    ...ks.surfaceStyle(family),
-    ...(padding != null ? { padding: ks.pad(padding) } : null),
-    ...style,
-  };
+  const surfaceStyle: StyleProp<ViewStyle> = [
+    {
+      borderRadius: containerRadius(),
+      ...ks.surfaceStyle(family),
+      ...(padding != null ? { padding: ks.pad(padding) } : null),
+    },
+    style,
+  ];
 
   return (
     <View style={surfaceStyle} testID={testID}>
