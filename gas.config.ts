@@ -19,9 +19,20 @@ export interface GasLegalConfig {
   termsUrl: string;
 }
 
+// Template-local augmentation: the design slice carries a per-screen archetype
+// map that KitContext / lib/design-language read (`design.screenArchetypes`).
+// It is not part of the schema GasDesignSystem, so widen the design type here.
+export interface GasDesignWithArchetypes {
+  screenArchetypes?: Record<string, string>;
+  kitSeed?: string;
+}
+
 // ─── Configuration ────────────────────────────────────────────────────────────
 
-export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
+export const gasConfig: Omit<GasConfig, 'design'> & {
+  design: GasConfig['design'] & GasDesignWithArchetypes;
+  legal: GasLegalConfig;
+} = {
   app: {
     name: "Executive Coach AI",
     slug: "executive-coach-ai-2",
@@ -218,8 +229,8 @@ export const gasConfig: GasConfig & { legal: GasLegalConfig } = {
     },
     helpSystem: false,
     search: {
-      enabled: null,
-      entities: null,
+      enabled: false,
+      entities: [],
       implementation: "client-side",
     },
     socialSharing: {

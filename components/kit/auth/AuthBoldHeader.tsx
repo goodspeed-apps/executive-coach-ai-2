@@ -18,7 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Link, router } from 'expo-router';
 import { MailCheck } from 'lucide-react-native';
 import { useThemeColors } from '@/context/ThemeContext';
-import { ProviderIcon } from '@/components/auth/ProviderIcon';
+import { ProviderIcon, type AuthProvider } from '@/components/auth/ProviderIcon';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { Entrance } from '../motion/Entrance';
 import type { AuthVariantProps } from './types';
@@ -194,7 +194,7 @@ export function AuthBoldHeader({ mode, vm }: AuthVariantProps) {
             <View style={{ marginTop: 24 }}>
               <Text style={{ color: colors.textSecondary, fontSize: 13, textAlign: 'center', marginBottom: 14 }}>or continue with</Text>
               <View style={{ gap: 10 }}>
-                {vm.oauthProviders.map((p) => (
+                {vm.oauthProviders.map((p: AuthProvider) => (
                   <TouchableOpacity
                     key={p}
                     style={pillOauth}

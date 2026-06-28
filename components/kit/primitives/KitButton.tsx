@@ -172,7 +172,14 @@ export function KitButton({
     <ActivityIndicator accessibilityLabel="Loading" size="small" color={textColor} />
   ) : (
     <>
-      {Icon ? <Icon size={iconSz} color={textColor} /> : null}
+      {Icon
+        ? isValidElement(Icon)
+          ? Icon
+          : (() => {
+              const IconComponent = Icon as React.ElementType;
+              return <IconComponent size={iconSz} color={textColor} />;
+            })()
+        : null}
       <Text style={textStyle}>{label}</Text>
     </>
   );
