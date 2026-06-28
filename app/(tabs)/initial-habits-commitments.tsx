@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, ScrollView, TextInput, Pressable, StyleSheet, Platform, KeyboardAvoidingView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Plus, ArrowRight, Clock, Target } from 'lucide-react-native';
-import { router } from 'expo-router';
+import { Plus, ArrowRight, Clock } from 'lucide-react-native';
 import { useThemeColors } from '@/context/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useAnalytics } from '@/hooks/useAnalytics';
@@ -24,21 +23,40 @@ export default function InitialHabitsCommitmentsScreen() {
   const { toast, showToast, hideToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [fetchError, setFetchError] = useState(false);
   const [name, setName] = useState('');
   const [priority, setPriority] = useState<Priority>('High');
   const [items, setItems] = useState<Commitment[]>([]);
 
   const fetchData = useCallback(async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
     const start = Date.now();
+    setFetchError(false);
     try {
       const { data, error } = await trackApiLatency('goals_fetch', () =>
-        supabase.from('goals').select('id,title,focus_area,progress_score').eq('user_id', user?.id ?? '').order('created_at', { ascending: false }).limit(6),
+        supabase
+          .from('goals')
+          .select('id,title,focus_area,progress_score')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(6),
       );
       if (error) throw error;
-      setItems((data ?? []).map((g) => ({ id: g.id, title: g.title, meta: g.focus_area ?? 'Weekly commitment', priority: 'High' as Priority })));
+      setItems(
+        (data ?? []).map((g) => ({
+          id: g.id,
+          title: g.title,
+          meta: g.focus_area ?? 'Weekly commitment',
+          priority: 'High' as Priority,
+        })),
+      );
       trackScreenLoad('initial_habits_commitments', start);
     } catch (e) {
       captureException(e, { screen: 'initial_habits_commitments', action: 'fetch' });
+      setFetchError(true);
     }
   }, [user?.id]);
 
@@ -58,43 +76,69 @@ export default function InitialHabitsCommitmentsScreen() {
       return;
     }
     track('commitment_added', { priority });
-    setItems((prev) => [{ id: `${Date.now()}`, title: name.trim(), meta: 'Recurring · weekly', priority }, ...prev]);
+    setItems((prev) => [
+      { id: `${Date.now()}`, title: name.trim(), meta: 'Recurring · weekly', priority },
+      ...prev,
+    ]);
     setName('');
   }, [name, priority, track, showToast]);
 
+  const handleConfirm = useCallback(() => {
+    track('baseline_confirmed', { count: items.length });
+    showToast(`Baseline saved with ${items.length} commitment${items.length === 1 ? '' : 's'}`, 'success');
+  }, [items.length, track, showToast]);
+
   const priorities: Priority[] = ['High', 'Medium', 'Low'];
 
+  const s = styles(colors);
+
   return (
-    <SafeAreaView style={[styles.flex, { backgroundColor: colors.background }]} edges={['top']}>
-      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <View style={styles.header}>
-          <Text style={[styles.step, { color: colors.textMuted }]}>SETUP · STEP 4 OF 5</Text>
-          <View style={[styles.track, { backgroundColor: colors.surfaceElevated }]}>
-            <View style={[styles.fill, { backgroundColor: colors.primary }]} />
+    <SafeAreaView style={[s.flex, { backgroundColor: colors.background }]} edges={['top']}>
+      <KeyboardAvoidingView style={s.flex} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <View style={s.header}>
+          <Text style={[s.step, { color: colors.textMuted }]}>SETUP · STEP 4 OF 5</Text>
+          <View style={[s.track, { backgroundColor: colors.surfaceElevated }]}>
+            <View style={[s.fill, { backgroundColor: colors.primary }]} />
           </View>
         </View>
+
         <ScrollView
-          contentContainerStyle={styles.content}
+          contentContainerStyle={s.content}
           showsVerticalScrollIndicator={false}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={colors.primary}
+            />
+          }
         >
           <Animated.View entering={FadeInDown}>
-            <Text style={[styles.title, { color: colors.text }]}>Initial habits & commitments</Text>
-            <Text style={[styles.sub, { color: colors.textMuted }]}>Define the recurring work I"ll track each week. I tune nudges around your ADHD rhythms as we go.</Text>
+            <Text style={[s.title, { color: colors.text }]}>Initial habits & commitments</Text>
+            <Text style={[s.sub, { color: colors.textMuted }]}>
+              Define the recurring work I'll track each week. I tune nudges around your ADHD rhythms as we go.
+            </Text>
           </Animated.View>
 
-          <KitCard style={[styles.addCard, { borderLeftColor: colors.primary, borderLeftWidth: 3 }]}>
-            <Text style={[styles.addLabel, { color: colors.secondary }]}>ADD A WEEKLY COMMITMENT</Text>
+          <KitCard style={[s.addCard, { borderLeftColor: colors.primary, borderLeftWidth: 3 }]}>
+            <Text style={[s.addLabel, { color: colors.secondary }]}>ADD A WEEKLY COMMITMENT</Text>
             <TextInput
               testID="create-commitment-name-input"
               value={name}
               onChangeText={setName}
               placeholder="e.g. Two deep-work blocks before noon"
               placeholderTextColor={colors.textFaint}
-              style={[styles.input, { backgroundColor: colors.surfaceElevated, borderColor: colors.border, color: colors.text }]}
+              style={[
+                s.input,
+                {
+                  backgroundColor: colors.surfaceElevated,
+                  borderColor: colors.border,
+                  color: colors.text,
+                },
+              ]}
             />
-            <Text style={[styles.chipGroup, { color: colors.textFaint }]}>PRIORITY LEVEL</Text>
-            <View style={styles.chipRow}>
+            <Text style={[s.chipGroup, { color: colors.textFaint }]}>PRIORITY LEVEL</Text>
+            <View style={s.chipRow}>
               {priorities.map((p) => {
                 const sel = p === priority;
                 return (
@@ -103,73 +147,158 @@ export default function InitialHabitsCommitmentsScreen() {
                     onPress={() => setPriority(p)}
                     accessibilityLabel={`Priority ${p}`}
                     accessibilityHint="Sets the priority for this commitment"
-                    style={[styles.chip, { borderColor: sel ? colors.borderAccent : colors.border, backgroundColor: sel ? colors.primaryMuted : colors.surfaceElevated }]}
+                    style={[
+                      s.chip,
+                      {
+                        borderColor: sel ? colors.borderAccent : colors.border,
+                        backgroundColor: sel ? colors.primaryMuted : colors.surfaceElevated,
+                      },
+                    ]}
                   >
-                    <Text style={[styles.chipText, { color: sel ? colors.primary : colors.textMuted }]}>{p}</Text>
+                    <Text style={[s.chipText, { color: sel ? colors.primary : colors.textMuted }]}>
+                      {p}
+                    </Text>
                   </Pressable>
                 );
               })}
             </View>
-            <KitButton testID="create-commitment-add" label="Add commitment" onPress={addCommitment} icon={<Plus size={16} color={colors.textOnPrimary} />} />
+            <KitButton
+              testID="create-commitment-add"
+              label="Add commitment"
+              onPress={addCommitment}
+              icon={<Plus size={16} color={colors.textOnPrimary} />}
+            />
           </KitCard>
 
-          <View style={styles.sectionHead}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Your baseline</Text>
-            <Text style={[styles.count, { color: colors.secondary, backgroundColor: colors.secondaryMuted }]}>{items.length} committed</Text>
+          <View style={s.sectionHead}>
+            <Text style={[s.sectionTitle, { color: colors.text }]}>Your baseline</Text>
+            <Text
+              style={[
+                s.count,
+                { color: colors.secondary, backgroundColor: colors.secondaryMuted },
+              ]}
+            >
+              {items.length} committed
+            </Text>
           </View>
 
           {loading ? (
             <LoadingSkeleton variant="list" />
+          ) : fetchError ? (
+            <KitCard style={[s.errorCard, { borderColor: colors.border }]}>
+              <Text style={[s.errorText, { color: colors.textMuted }]}>
+                Could not load your commitments. Pull down to retry.
+              </Text>
+              <KitButton
+                label="Retry"
+                variant="outline"
+                onPress={() => {
+                  setLoading(true);
+                  fetchData().finally(() => setLoading(false));
+                }}
+              />
+            </KitCard>
+          ) : items.length === 0 ? (
+            <KitCard style={[s.emptyCard, { borderColor: colors.border }]}>
+              <Text style={[s.emptyText, { color: colors.textFaint }]}>
+                Add your first commitment above to build your baseline.
+              </Text>
+            </KitCard>
           ) : (
             items.map((c, i) => <CommitmentCard key={c.id} item={c} index={i} />)
           )}
 
-          <KitSurface style={[styles.liveNote, { borderColor: colors.border }]}>
-            <View style={[styles.dot, { backgroundColor: colors.primary }]} />
-            <Text style={[styles.noteText, { color: colors.textMuted }]}>
-              <Text style={{ color: colors.text, fontFamily: 'Manrope_600SemiBold' }}>From your coach: </Text>
-              A focused baseline is stronger than a crowded one. I"ll watch for overload and nudge you to defer if mornings get packed.
+          <KitSurface style={[s.liveNote, { borderColor: colors.border }]}>
+            <View style={[s.dot, { backgroundColor: colors.primary }]} />
+            <Text style={[s.noteText, { color: colors.textMuted }]}>
+              <Text style={{ color: colors.text, fontFamily: 'Manrope_600SemiBold' }}>
+                From your coach:{' '}
+              </Text>
+              A focused baseline is stronger than a crowded one. I'll watch for overload and nudge you to defer if mornings get packed.
             </Text>
           </KitSurface>
         </ScrollView>
-        <View style={styles.footer}>
+
+        <View style={s.footer}>
           <KitButton
             testID="initial-habits-commitments-confirm"
             label="Review & confirm baseline"
-            onPress={() => {
-              track('baseline_confirmed', { count: items.length });
-              router.push('/(tabs)/placeholder');
-            }}
+            onPress={handleConfirm}
             icon={<ArrowRight size={18} color={colors.textOnPrimary} />}
           />
         </View>
+
         {toast && <Toast {...toast} onHide={hideToast} />}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1 },
-  header: { paddingHorizontal: 20, paddingTop: 6, paddingBottom: 14 },
-  step: { fontFamily: 'Sora_500Medium', fontSize: 11, letterSpacing: 0.8, marginBottom: 14 },
-  track: { height: 4, borderRadius: 4, overflow: 'hidden' },
-  fill: { height: '100%', width: '80%', borderRadius: 4 },
-  content: { paddingHorizontal: 20, paddingBottom: 120 },
-  title: { fontFamily: 'Outfit_700Bold', fontSize: 27, letterSpacing: -0.5, marginBottom: 8 },
-  sub: { fontFamily: 'Manrope_400Regular', fontSize: 14, lineHeight: 21, marginBottom: 20 },
-  addCard: { marginBottom: 22 },
-  addLabel: { fontFamily: 'Sora_500Medium', fontSize: 12, letterSpacing: 0.5, marginBottom: 8 },
-  input: { fontFamily: 'Manrope_400Regular', fontSize: 15, borderWidth: 1, borderRadius: 10, padding: 13 },
-  chipGroup: { fontFamily: 'Sora_500Medium', fontSize: 10, letterSpacing: 0.8, marginTop: 12, marginBottom: 6 },
-  chipRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
-  chip: { borderWidth: 1, borderRadius: 20, paddingHorizontal: 13, paddingVertical: 7 },
-  chipText: { fontFamily: 'Sora_500Medium', fontSize: 12 },
-  sectionHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  sectionTitle: { fontFamily: 'Outfit_700Bold', fontSize: 18 },
-  count: { fontFamily: 'Sora_500Medium', fontSize: 12, paddingHorizontal: 10, paddingVertical: 3, borderRadius: 12, overflow: 'hidden' },
-  liveNote: { marginTop: 18, borderRadius: 14, padding: 14, borderWidth: 1, flexDirection: 'row', gap: 11 },
-  dot: { width: 9, height: 9, borderRadius: 5, marginTop: 5 },
-  noteText: { flex: 1, fontFamily: 'Manrope_400Regular', fontSize: 13, lineHeight: 20 },
-  footer: { position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 20, paddingTop: 14, paddingBottom: 24 },
-});
+const styles = (colors: ReturnType<typeof useThemeColors>) =>
+  StyleSheet.create({
+    flex: { flex: 1 },
+    header: { paddingHorizontal: 20, paddingTop: 6, paddingBottom: 14 },
+    step: { fontFamily: 'Sora_500Medium', fontSize: 11, letterSpacing: 0.8, marginBottom: 14 },
+    track: { height: 4, borderRadius: 4, overflow: 'hidden' },
+    fill: { height: '100%', width: '80%', borderRadius: 4 },
+    content: { paddingHorizontal: 20, paddingBottom: 120 },
+    title: { fontFamily: 'Outfit_700Bold', fontSize: 27, letterSpacing: -0.5, marginBottom: 8 },
+    sub: { fontFamily: 'Manrope_400Regular', fontSize: 14, lineHeight: 21, marginBottom: 20 },
+    addCard: { marginBottom: 22 },
+    addLabel: { fontFamily: 'Sora_500Medium', fontSize: 12, letterSpacing: 0.5, marginBottom: 8 },
+    input: {
+      fontFamily: 'Manrope_400Regular',
+      fontSize: 15,
+      borderWidth: 1,
+      borderRadius: 10,
+      padding: 13,
+    },
+    chipGroup: {
+      fontFamily: 'Sora_500Medium',
+      fontSize: 10,
+      letterSpacing: 0.8,
+      marginTop: 12,
+      marginBottom: 6,
+    },
+    chipRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
+    chip: { borderWidth: 1, borderRadius: 20, paddingHorizontal: 13, paddingVertical: 7 },
+    chipText: { fontFamily: 'Sora_500Medium', fontSize: 12 },
+    sectionHead: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 12,
+    },
+    sectionTitle: { fontFamily: 'Outfit_700Bold', fontSize: 18 },
+    count: {
+      fontFamily: 'Sora_500Medium',
+      fontSize: 12,
+      paddingHorizontal: 10,
+      paddingVertical: 3,
+      borderRadius: 12,
+      overflow: 'hidden',
+    },
+    errorCard: { padding: 18, borderRadius: 14, borderWidth: 1, gap: 12, marginBottom: 12 },
+    errorText: { fontFamily: 'Manrope_400Regular', fontSize: 14, lineHeight: 20, textAlign: 'center' },
+    emptyCard: { padding: 18, borderRadius: 14, borderWidth: 1, marginBottom: 12, alignItems: 'center' },
+    emptyText: { fontFamily: 'Manrope_400Regular', fontSize: 14, lineHeight: 20, textAlign: 'center' },
+    liveNote: {
+      marginTop: 18,
+      borderRadius: 14,
+      padding: 14,
+      borderWidth: 1,
+      flexDirection: 'row',
+      gap: 11,
+    },
+    dot: { width: 9, height: 9, borderRadius: 5, marginTop: 5 },
+    noteText: { flex: 1, fontFamily: 'Manrope_400Regular', fontSize: 13, lineHeight: 20 },
+    footer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      paddingHorizontal: 20,
+      paddingTop: 14,
+      paddingBottom: 24,
+    },
+  });
